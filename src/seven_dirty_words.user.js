@@ -28,3 +28,33 @@
 })();
 
 console.log("Seven Dirty Words script initialized");
+var lyricsNodes = $('#lyric_space')
+  .contents()
+  .filter(function (){
+    return this.nodeType == 3;
+  });
+
+// TODO bigger list, externalize list
+var dirtyWords = ['shit', 'piss', 'fuck', 'cunt', 'cocksucker', 'motherfucker', 'tits'];
+
+$(lyricsNodes).each(function(){
+  var node = this;
+  $(dirtyWords).each(function(){
+    var dirtyWord = this;
+    var pat = dirtyWord.toUpperCase();
+
+    // code below stolen from http://johannburkard.de/resources/Johann/jquery.highlight-3.js
+    var pos = node.data.toUpperCase().indexOf(pat);
+    if (pos >= 0) {
+      var spannode = document.createElement('span');
+      var middlebit = node.splitText(pos);
+      var endbit = middlebit.splitText(pat.length);
+      var middleclone = middlebit.cloneNode(true);
+      spannode.appendChild(middleclone);
+      middlebit.parentNode.replaceChild(spannode, middlebit);
+      $(spannode).css('background-color', 'yellow');
+    }
+  });
+});
+
+console.log(lyricsNodes);
