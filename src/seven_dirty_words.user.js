@@ -28,6 +28,13 @@
 })();
 
 console.log("Seven Dirty Words script initialized");
+
+var nextColorIndex = 0;
+var availableColors = ['red', 'yellow', 'green', 'orange', 'blue'];
+function pickColor() {
+  return availableColors[nextColorIndex++ % availableColors.length];
+}
+
 var lyricsNodes = $('#lyric_space')
   .contents()
   .filter(function (){
@@ -37,6 +44,9 @@ var lyricsNodes = $('#lyric_space')
 // TODO bigger list, externalize list
 var dirtyWords = ['shit', 'piss', 'fuck', 'cunt', 'cocksucker', 'motherfucker', 'tits'];
 
+var dirtyNodes = new Object();
+
+// scan the text
 $(lyricsNodes).each(function(){
   var node = this;
   $(dirtyWords).each(function(){
@@ -52,9 +62,41 @@ $(lyricsNodes).each(function(){
       var middleclone = middlebit.cloneNode(true);
       spannode.appendChild(middleclone);
       middlebit.parentNode.replaceChild(spannode, middlebit);
-      $(spannode).css('background-color', 'yellow');
+      if (typeof dirtyNodes[dirtyWord] == 'undefined') {
+        dirtyNodes[dirtyWord] = new Object();
+        dirtyNodes[dirtyWord].nodes = new Array();
+        dirtyNodes[dirtyWord].color = pickColor();
+      }
+      dirtyNodes[dirtyWord].nodes.push(spannode);
+      $(spannode).css('background-color', dirtyNodes[dirtyWord].color);
     }
   });
 });
 
-console.log(lyricsNodes);
+console.log();
+
+// show a console with results
+var templateHtml = '<div id="sevenDirtyWordsConsole"> \
+<h1>Dirty Words Found</h1> \
+  <ol> \
+    <% _.each(dirtyNodes, function(dirtyWordInfo, dirtyWord) { %> \
+      <li> \
+        <span style="background-color: <%= dirtyWordInfo.color %>"><%= dirtyWord %></span> \
+        - \
+        <span><%= dirtyWordInfo.nodes.length %></span> time(s)</span> \
+      </li> \
+    <% }); %> \
+  </ol> \
+</div>';
+
+$('body').append(_.template(templateHtml, {dirtyNodes: dirtyNodes}));
+
+// style the console
+$('#sevenDirtyWordsConsole').css({
+  'position': 'absolute',
+  'right': '3px',
+  'top': '3px',
+  'width': '200px',
+  'background-color': 'white'
+});
+
