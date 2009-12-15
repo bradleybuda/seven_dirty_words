@@ -27,8 +27,6 @@
   _ = unsafeWindow._;
 })();
 
-console.log("Seven Dirty Words script initialized");
-
 var nextColorIndex = 0;
 var availableColors = ['red', 'yellow', 'green', 'orange', 'blue'];
 function pickColor() {
@@ -72,8 +70,6 @@ $(lyricsNodes).each(function(){
     }
   });
 });
-
-console.log();
 
 // show a console with results
 var templateHtml = '<div id="sevenDirtyWordsConsole"> \
