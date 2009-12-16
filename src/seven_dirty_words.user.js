@@ -33,7 +33,14 @@ function pickColor() {
   return availableColors[nextColorIndex++ % availableColors.length];
 }
 
-var lyricsNodes = $('#lyric_space')
+function log(o) {
+  if (typeof console != "undefined")
+    console.log(o);
+}
+
+log("About to scan lyrics");
+
+var lyricsNodes = $('#lyric_space *')
   .contents()
   .filter(function (){
     return this.nodeType == 3;
@@ -47,6 +54,7 @@ var dirtyNodes = new Object();
 // scan the text
 $(lyricsNodes).each(function(){
   var node = this;
+
   $(dirtyWords).each(function(){
     var dirtyWord = this;
     var pat = dirtyWord.toUpperCase();
@@ -70,6 +78,9 @@ $(lyricsNodes).each(function(){
     }
   });
 });
+
+log("done scanning");
+log(dirtyNodes);
 
 // show a console with results
 var templateHtml = '<div id="sevenDirtyWordsConsole"> \
