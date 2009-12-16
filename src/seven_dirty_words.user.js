@@ -95,7 +95,7 @@ log(dirtyNodes);
 var templateHtml = ' \
 <div id="sevenDirtyWordsConsole"> \
   <h1>Dirty Words Found</h1> \
-  <ol> \
+  <ul> \
     <% _.each(dirtyNodes, function(dirtyWordInfo, dirtyWord) { %> \
       <li> \
         <span style="background-color: <%= dirtyWordInfo.color %>"><%= dirtyWord %></span> \
@@ -103,23 +103,24 @@ var templateHtml = ' \
         <span><%= dirtyWordInfo.nodes.length %></span> time(s)</span> \
       </li> \
     <% }); %> \
-  </ol> \
+  </ul> \
   <div id="editDictionaryLink"> \
     <a href="#">Edit Dictionary</a> \
   </div> \
+  <div id="editDictionaryBox"> \
+    <h2>Dictionary</h2> \
+    <ul> \
+      <% _.each(dirtyWords, function(dirtyWord) { %> \
+        <li><%= dirtyWord %></li> \
+      <% }); %> \
+      <li id="newDictionaryWord"> \
+        <input /> \
+      </li> \
+    </ul> \
+  </div> \
 </div>';
 
-$('body').append(_.template(templateHtml, {dirtyNodes: dirtyNodes}));
-
-// listen for clicks on the edit link
-$('#editDictionaryLink a').click(function(){
-  log("Opening dictionary for edit");
-
-  $('#editDictionaryLink').before('<div><h2>Dictionary</h2>Words go here</div>'); // TODO template
-  $('#sevenDirtyWordsConsole').css('bottom', '5px');
-
-  return false;
-});
+$('body').append(_.template(templateHtml, {dirtyNodes: dirtyNodes, dirtyWords: dirtyWords}));
 
 // style the console
 $('#sevenDirtyWordsConsole').css({
@@ -132,9 +133,11 @@ $('#sevenDirtyWordsConsole').css({
   'border': '1px solid black'
 });
 
-$('#sevenDirtyWordsConsole ol').css({
+$('#sevenDirtyWordsConsole ul').css({
   'min-height': '30px'
 });
+
+$('#editDictionaryBox').hide();
 
 $('#editDictionaryLink').css({
   'height': '20px',
@@ -145,4 +148,14 @@ $('#editDictionaryLink').css({
 $('#editDictionaryLink a').css({
   'align': 'right',
   'color': 'blue'
+});
+
+// listen for clicks on the edit link
+$('#editDictionaryLink a').click(function(){
+  log("Opening dictionary for edit");
+
+  $('#editDictionaryBox').show();
+  $('#sevenDirtyWordsConsole').css('bottom', '5px'); // TODO animate that shiz
+
+  return false;
 });
