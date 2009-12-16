@@ -113,10 +113,13 @@ SevenDirtyWords.prototype.wordList = function(){
 };
 
 SevenDirtyWords.prototype.addWord = function(word){
-  var existingWords = wordList();
-  // TODO check duplicates
-  existingWords.push(word);
-  GM_setValue('dictionary', existingWords.join('|'));
+  var instance = this;
+  window.setTimeout(function(){ // setTimeout to work around http://wiki.greasespot.net/0.7.20080121.0%2B_compatibility
+    var existingWords = instance.wordList();
+    // TODO check duplicates
+    existingWords.push(word);
+    GM_setValue('dictionary', existingWords.join('|'));
+  }, 0);
 };
   
 // setup document
@@ -187,6 +190,8 @@ SevenDirtyWords.prototype.applyStyles = function(){
 };
 
 SevenDirtyWords.prototype.addBehaviors = function(){
+  var instance = this;
+
   // expand edit dictionary
   $('#editDictionaryLink a').click(function(){
     SevenDirtyWords.log("Opening dictionary for edit");
@@ -208,7 +213,7 @@ SevenDirtyWords.prototype.addBehaviors = function(){
 
     var newWord = $(this).val();
     SevenDirtyWords.log("Adding " + newWord + " to dictionary");
-    // TODO persist
+    instance.addWord(newWord);
 
     // TODO reload everything
 
