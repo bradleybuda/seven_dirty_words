@@ -40,18 +40,27 @@ function log(o) {
 
 log("About to scan lyrics");
 
+// Seed dictionary with dirty words if necessary
+var initialWords = ['shit', 'piss', 'fuck', 'cunt', 'cocksucker', 'motherfucker', 'tits'];
+if (GM_getValue('dictionary', '__EMPTY__') == '__EMPTY__') {
+  log("initializing dictionary");
+  GM_setValue('dictionary', initialWords.join('|'));
+}
+
+// Load dictionary from local storage
+var dirtyWords = GM_getValue('dictionary','__EMPTY__').split('|');
+log("Dirty word list:");
+log(dirtyWords);
+
+// Find data to scan
 var lyricsNodes = $('#lyric_space *')
   .contents()
   .filter(function (){
     return this.nodeType == 3;
   });
 
-// TODO bigger list, externalize list
-var dirtyWords = ['shit', 'piss', 'fuck', 'cunt', 'cocksucker', 'motherfucker', 'tits'];
-
-var dirtyNodes = new Object();
-
 // scan the text
+var dirtyNodes = new Object();
 $(lyricsNodes).each(function(){
   var node = this;
 
