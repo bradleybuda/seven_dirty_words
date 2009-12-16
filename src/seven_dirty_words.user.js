@@ -92,8 +92,9 @@ log("done scanning");
 log(dirtyNodes);
 
 // show a console with results
-var templateHtml = '<div id="sevenDirtyWordsConsole"> \
-<h1>Dirty Words Found</h1> \
+var templateHtml = ' \
+<div id="sevenDirtyWordsConsole"> \
+  <h1>Dirty Words Found</h1> \
   <ol> \
     <% _.each(dirtyNodes, function(dirtyWordInfo, dirtyWord) { %> \
       <li> \
@@ -103,16 +104,45 @@ var templateHtml = '<div id="sevenDirtyWordsConsole"> \
       </li> \
     <% }); %> \
   </ol> \
+  <div id="editDictionaryLink"> \
+    <a href="#">Edit Dictionary</a> \
+  </div> \
 </div>';
 
 $('body').append(_.template(templateHtml, {dirtyNodes: dirtyNodes}));
 
-// style the console
-$('#sevenDirtyWordsConsole').css({
-  'position': 'absolute',
-  'right': '3px',
-  'top': '3px',
-  'width': '200px',
-  'background-color': 'white'
+// listen for clicks on the edit link
+$('#editDictionaryLink a').click(function(){
+  log("Opening dictionary for edit");
+
+  $('#editDictionaryLink').before('<div><h2>Dictionary</h2>Words go here</div>'); // TODO template
+  $('#sevenDirtyWordsConsole').css('bottom', '5px');
+
+  return false;
 });
 
+// style the console
+$('#sevenDirtyWordsConsole').css({
+  'position': 'fixed',
+  'right': '5px',
+  'top': '5px',
+  'padding': '8px',
+  'width': '200px',
+  'background-color': 'white',
+  'border': '1px solid black'
+});
+
+$('#sevenDirtyWordsConsole ol').css({
+  'min-height': '30px'
+});
+
+$('#editDictionaryLink').css({
+  'height': '20px',
+  'position': 'absolute',
+  'bottom': '5px'
+});
+
+$('#editDictionaryLink a').css({
+  'align': 'right',
+  'color': 'blue'
+});
