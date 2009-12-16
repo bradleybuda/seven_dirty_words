@@ -113,13 +113,10 @@ SevenDirtyWords.prototype.wordList = function(){
 };
 
 SevenDirtyWords.prototype.addWord = function(word){
-  var instance = this;
-  window.setTimeout(function(){ // setTimeout to work around http://wiki.greasespot.net/0.7.20080121.0%2B_compatibility
-    var existingWords = instance.wordList();
-    // TODO check duplicates
-    existingWords.push(word);
-    GM_setValue('dictionary', existingWords.join('|'));
-  }, 0);
+  var existingWords = this.wordList();
+  // TODO check duplicates
+  existingWords.push(word);
+  GM_setValue('dictionary', existingWords.join('|'));
 };
   
 // setup document
@@ -213,9 +210,14 @@ SevenDirtyWords.prototype.addBehaviors = function(){
 
     var newWord = $(this).val();
     SevenDirtyWords.log("Adding " + newWord + " to dictionary");
-    instance.addWord(newWord);
-
-    // TODO reload everything
+    
+    // need to call down to model using setTimeout to make greasemonkey security happy
+    window.setTimeout(function(){
+      // TODO make this binding / data driven
+      instance.addWord(newWord);
+      instance.scanLyrics();
+      instance.render();
+    });
 
     return false;
   });
