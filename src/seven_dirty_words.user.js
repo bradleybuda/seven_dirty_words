@@ -150,12 +150,31 @@ $('#editDictionaryLink a').css({
   'color': 'blue'
 });
 
-// listen for clicks on the edit link
+// add behaviors
+// expand edit dictionary
 $('#editDictionaryLink a').click(function(){
   log("Opening dictionary for edit");
 
   $('#editDictionaryBox').show();
   $('#sevenDirtyWordsConsole').css('bottom', '5px'); // TODO animate that shiz
+
+  return false;
+});
+
+// press enter to add new word
+$('#newDictionaryWord input').keypress(function(event){
+  // TODO show the "how to use" instructions
+
+  // ignore all keys other than the enter key
+  if (event.which != 13) {
+    return;
+  }
+
+  var newWord = $(this).val();
+  console.log("Adding " + newWord + " to dictionary");
+  // TODO persist
+
+  // TODO reload everything
 
   return false;
 });
